@@ -10,7 +10,6 @@ endif(NOT MSVC)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(ONNX_ROOT ${PROJECT_SOURCE_DIR}/third_party/onnx)
-add_subdirectory(${ONNX_ROOT})
 
 file(READ "${PROJECT_SOURCE_DIR}/VERSION_NUMBER" ONNX_OPTIMIZER_VERSION)
 string(STRIP "${ONNX_OPTIMIZER_VERSION}" ONNX_OPTIMIZER_VERSION)
@@ -26,6 +25,14 @@ target_include_directories(onnx_optimizer PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include>
     )
+if(ONNX_ML)
+    target_compile_definitions(onnx_optimizer PUBLIC
+        ONNX_ML)
+endif()
+if(ONNX_NAMESPACE)
+    target_compile_definitions(onnx_optimizer PUBLIC
+        ONNX_NAMESPACE=${ONNX_NAMESPACE})
+endif()
 
 if(BUILD_ONNX_PYTHON)
   if("${PY_EXT_SUFFIX}" STREQUAL "")
